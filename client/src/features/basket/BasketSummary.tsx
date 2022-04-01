@@ -1,14 +1,21 @@
 import { TableContainer, Paper, Table, TableBody, TableRow, TableCell } from "@mui/material";
+import { Fragment } from "react";
 import { useAppSelector } from "../../app/store/configureStore";
 import { currencyFormat } from "../../app/util/util";
 
-export default function BasketSummary() {
+interface Props {
+    subtotal?: number
+}
+
+export default function BasketSummary({subtotal}: Props) {
     const {basket} = useAppSelector(state => state.basket);
-    const subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
+    if (subtotal === undefined) {
+        subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0;
+    }
     const deliveryFee = subtotal > 10000 ? 0 : 500;
 
     return (
-        <>
+        <Fragment>
             <TableContainer component={Paper} variant={'outlined'}>
                 <Table>
                     <TableBody>
@@ -32,6 +39,6 @@ export default function BasketSummary() {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </>
+        </Fragment>
     )
 }
